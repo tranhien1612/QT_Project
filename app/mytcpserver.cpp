@@ -17,9 +17,8 @@ void MyTcpServer::open(quint16 port){
 }
 
 void MyTcpServer::close(){
-    m_socket->abort();
-    m_socket->flush();
-    m_socket->close();
+//    m_socket->abort();
+//    m_socket->close();
     m_server->close();
     emit isListen(m_server->isListening());
 }

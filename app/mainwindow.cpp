@@ -8,23 +8,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->tabWidget->setCurrentIndex(1);
 
-    //serial
-    serial = new MySerial(this);
-    connect(serial, &MySerial::isConnect, this, &MainWindow::isConnectSerial);
-    connect(serial, &MySerial::serialReceiveData, this, &MainWindow::readSerialData);
     ui->serial_sendBtn->setEnabled(false);
-
-    //Tcp Client
-    tcpClient = new MyTcpClient(this);
-    connect(tcpClient, &MyTcpClient::isConnect, this, &MainWindow::isConnectTcpClient);
-    connect(tcpClient, &MyTcpClient::tcpReceiveData, this, &MainWindow::readTcpClientData);
     ui->tcp_sendBtn->setEnabled(false);
+    ui->tcpServer_btnSend->setEnabled(false);
+    ui->pair_btnSend->setEnabled(false);
 
     //Tcp Server
     tcpSever = new MyTcpServer(this);
     connect(tcpSever, &MyTcpServer::isListen, this, &MainWindow::isListenTcpServer);
     connect(tcpSever, &MyTcpServer::tcpReceiveData, this, &MainWindow::readTcpSeverData);
-    ui->tcpServer_btnSend->setEnabled(false);
 
     //Udp
     udp = new MyUdp(this);
@@ -88,12 +80,17 @@ void MainWindow::on_serial_connectBtn_clicked()
 {
     bool isOk;
     if(!serialIsConnect){
+        serial = new MySerial(this);
+        connect(serial, &MySerial::isConnect, this, &MainWindow::isConnectSerial);
+        connect(serial, &MySerial::serialReceiveData, this, &MainWindow::readSerialData);
+
         qint32 baudrate = ui->baudrate_comBox->currentText().toInt(&isOk);
         QString portName = ui->serial_comBox->currentText();
         qDebug() << "Port:" << portName <<"baudrate: " << baudrate;
         serial->open(portName, baudrate);
     }else{
         serial->close();
+        delete serial;
     }
 }
 
@@ -161,12 +158,18 @@ void MainWindow::on_tcp_connectBtn_clicked()
     quint16 port = ui->tcp_portTxt->text().toUInt(&isOk);
     qDebug() << host << port;
     if(!isTcpClientConnect && !host.isEmpty() && port != 0){
+
+        tcpClient = new MyTcpClient(this);
+        connect(tcpClient, &MyTcpClient::isConnect, this, &MainWindow::isConnectTcpClient);
+        connect(tcpClient, &MyTcpClient::tcpReceiveData, this, &MainWindow::readTcpClientData);
+
         QString text = "Connecting to " + host + ":" + QString::number(port);
         ui->tcp_logTxt->setTextColor(QColor(0,0,0));
         ui->tcp_logTxt->append(text);
         tcpClient->run(host, port);
     }else{
         tcpClient->close();
+        delete tcpClient;
     }
 }
 
@@ -293,7 +296,6 @@ void MainWindow::on_udp_connectBtn_clicked()
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
     if(ui->tabWidget->tabText(index) == "Pair"){
-        ui->pair_btnSend->setEnabled(false);
         ui->pair_checkBoxSerialEnable->setCheckState(Qt::CheckState::Checked);
         ui->pair_checkBoxTcpEnable->setCheckState(Qt::CheckState::Unchecked);
 
@@ -341,7 +343,9 @@ void MainWindow::isPairStatus(bool status){
         ui->pair_btnPair->setText("Pair");
         ui->pair_LogTxt->setTextColor(QColor(0,0,0));
         ui->pair_LogTxt->append("Pair Stop!");
+//        delete pair;
     }
+
 }
 
 void MainWindow::readPairTcpData(QByteArray data){
@@ -376,6 +380,11 @@ void MainWindow::on_pair_btnPair_clicked()
     quint16 port = ui->pair_lineTxtPort->text().toUInt(&isOk);
 
     if(!isPair){
+//        pair = new Pair(this);
+//        connect(pair, &Pair::isPair, this, &MainWindow::isPairStatus);
+//        connect(pair, &Pair::readPairSerialData, this, &MainWindow::readPairSerialData);
+//        connect(pair, &Pair::readPairTcpData, this, &MainWindow::readPairTcpData);
+
         if(ui->pair_checkBoxTcpServer->isChecked()){
             if(port != 0){
                 QString text = "Pair " + portName +":"+ QString::number(baudrate) + " and TcpServer port " + QString::number(port);
@@ -397,6 +406,7 @@ void MainWindow::on_pair_btnPair_clicked()
         pair->stop();
         if(ui->pair_checkBoxTcpServer->isChecked())
             isPairStatus(false);
+//        delete pair;
     }
 }
 
@@ -476,6 +486,7 @@ void MainWindow::on_pair_checkBoxTcpServer_stateChanged(int arg1)
     if(ui->pair_checkBoxTcpServer->isChecked()){
         ui->pair_checkBoxTcpClient->setCheckState(Qt::CheckState::Unchecked);
         ui->pair_lineTxtIp->setEnabled(false);
+        ui->pair_lineTxtIp->clear();
     }else{
         ui->pair_checkBoxTcpClient->setCheckState(Qt::CheckState::Checked);
         ui->pair_lineTxtIp->setEnabled(true);

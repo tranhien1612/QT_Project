@@ -52,9 +52,10 @@ void Pair::start(const QString &portName, qint32 baudRate, QString host, quint16
         m_client->connectToHost(host, port);
 
         if(!m_client->waitForConnected(10000)){
-            qDebug() << m_client->errorString();
+            qDebug() << "Don`t connect with TcpServer" <<m_client->errorString();
             m_client->abort();
             m_client->close();
+            emit isPair(false);
         }
     }
 
@@ -64,8 +65,6 @@ void Pair::stop(){
     m_serial->close();
     if(isTcpMode){
         m_server->close();
-        m_socket->abort();
-        m_socket->close();
         qDebug() << "TcpServer: " << m_server->isListening();
     }else{
         m_client->abort();
