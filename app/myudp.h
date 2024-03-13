@@ -16,6 +16,7 @@ class MyUdp : public QObject
 public:
     explicit MyUdp(QObject* parent = 0);
     void start(quint16 port);
+    void sendMsg();
 
 public slots:
     void connected();

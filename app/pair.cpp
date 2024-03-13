@@ -4,13 +4,16 @@
 Pair::Pair(QObject *parent) :
     QObject(parent)
 {
+    m_serial = new QSerialPort(this);
+    connect(m_serial, SIGNAL(readyRead()), this, SLOT(serialReadData()));
+
     m_client = new QTcpSocket(this);
     connect(m_client, SIGNAL(connected()), this, SLOT(tcpConnected()));
     connect(m_client, SIGNAL(disconnected()), this, SLOT(tcpDisconnected()));
     connect(m_client, SIGNAL(readyRead()), this, SLOT(tcpReadData()));
 
-    m_serial = new QSerialPort(this);
-    connect(m_serial, SIGNAL(readyRead()), this, SLOT(serialReadData()));
+    m_server = new QTcpServer();
+    connect(m_server, SIGNAL(newConnection()), this, SLOT(newTcpClientConnection()));
 }
 
 void Pair::start(const QString &portName, qint32 baudRate, QString host, quint16 port){
@@ -31,21 +34,70 @@ void Pair::start(const QString &portName, qint32 baudRate, QString host, quint16
         emit isPair(false);
     }
 
-    m_client->connectToHost(host, port);
+    if(host.isEmpty()){ //TcpServer
+        isTcpMode = true;
+        //Tcp Server
+        if(!m_server->listen(QHostAddress::Any, port)){
+            emit isPair(false);
+        }else{
+            isTcpConnect = true;
+            if(isTcpConnect && isSerialConnect)
+                emit isPair(true);
+            else
+                emit isPair(false);
+        }
+    }else{ //TcpClient
+        isTcpMode = false;
+        //Tcp Client
+        m_client->connectToHost(host, port);
 
-    if(!m_client->waitForConnected(10000)){
-        qDebug() << m_client->errorString();
+        if(!m_client->waitForConnected(10000)){
+            qDebug() << m_client->errorString();
+            m_client->abort();
+            m_client->close();
+        }
+    }
+
+}
+
+void Pair::stop(){
+    m_serial->close();
+    if(isTcpMode){
+        m_server->close();
+        m_socket->abort();
+        m_socket->close();
+        qDebug() << "TcpServer: " << m_server->isListening();
+    }else{
         m_client->abort();
         m_client->close();
     }
 }
 
-void Pair::stop(){
-    m_serial->close();
-    m_client->abort();
-    m_client->close();
+//TCP Server
+void Pair::newTcpClientConnection(){
+    m_socket = m_server->nextPendingConnection();
+    m_socket->setReadBufferSize(512);
+    connect(m_socket, SIGNAL(readyRead()), SLOT(tcpServerReadyRead()));
 }
 
+void Pair::tcpServerReadyRead(){
+    if (m_socket->bytesAvailable()){
+        QByteArray data = m_socket->readAll();
+        qDebug() << "Receiver from: " << m_socket->peerAddress().toString() << ", data: "<< data;
+        emit readPairTcpData(data);
+        serialSendMsg(data);
+    }
+}
+
+void Pair::tcpServerSendMsg(const char *data){
+    m_socket->write(data);
+}
+
+void Pair::tcpServerSendMsg(const QByteArray &data){
+    m_socket->write(data);
+}
+
+//Tcp Client
 void Pair::tcpConnected(){
     qDebug() << "TCP Client is connected!";
     isTcpConnect = true;
@@ -54,6 +106,7 @@ void Pair::tcpConnected(){
     else
         emit isPair(false);
 }
+
 void Pair::tcpDisconnected(){
     qDebug() << "TCP Client is disconnected!";
     isTcpConnect = false;
@@ -71,14 +124,17 @@ void Pair::serialReadData(){
     QByteArray data = m_serial->readAll();
     emit readPairSerialData(data);
     qDebug() << "Serial: " << data;
-    tcpSendMsg(data);
+    if(isTcpMode)
+        tcpServerSendMsg(data);
+    else
+        tcpClientSendMsg(data);
 }
 
-void Pair::tcpSendMsg(const char *data){
+void Pair::tcpClientSendMsg(const char *data){
     m_client->write(data);
 }
 
-void Pair::tcpSendMsg(const QByteArray &data){
+void Pair::tcpClientSendMsg(const QByteArray &data){
     m_client->write(data);
 }
 

@@ -51,5 +51,6 @@ void MyTcpClient::sendMsg(const QByteArray &data){
 
 void MyTcpClient::close(){
     m_client->abort();
+    m_client->flush();
     m_client->close();
 }

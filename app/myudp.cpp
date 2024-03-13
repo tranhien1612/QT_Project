@@ -41,6 +41,9 @@ void MyUdp::readyRead(){
 //    qInfo() << "Data: " << buffer.data() << "from: " << sender.toString() << senderPort;
 
     emit udpReceiveData(buffer.data());
-
 }
 
+void MyUdp::sendMsg(){
+//    QByteArray dgram = "hello";
+//    udp_->writeDatagram(dgram.data(), dgram.size(), QHostAddress::Broadcast, ipPort);
+}

@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonArray>
+#include <QProcess>
 
 #include <QEventLoop>
 #include <QTimer>
@@ -17,6 +18,9 @@
 #include <QNetworkDatagram>
 #include <QThread>
 #include <QQuaternion>
+
+#include <QMutex>
+#include <QHostInfo>
 
 #include "myserial.h"
 #include "myudp.h"
@@ -50,22 +54,25 @@ private slots:
     void on_tcpServer_btnSend_clicked();
 
     void on_udp_btnClear_clicked();
-
     void on_serial_btnClear_clicked();
-
     void on_tcp_btnClear_clicked();
 
     void on_tabWidget_currentChanged(int index);
-
     void on_pair_btnPair_clicked();
-
     void on_pair_btnClear_clicked();
-
     void on_pair_btnSend_clicked();
-
     void on_pair_checkBoxSerialEnable_stateChanged(int arg1);
-
     void on_pair_checkBoxTcpEnable_stateChanged(int arg1);
+
+    //Ip
+    void on_scan_btnPing_clicked();
+    void on_scan_btnPort_clicked();
+    void on_scan_btnIp_clicked();
+    void on_scan_btnClear_clicked();
+
+    void on_pair_checkBoxTcpClient_stateChanged(int arg1);
+
+    void on_pair_checkBoxTcpServer_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

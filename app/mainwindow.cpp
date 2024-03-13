@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget->setCurrentIndex(1);
 
     //serial
     serial = new MySerial(this);
@@ -289,8 +289,6 @@ void MainWindow::on_udp_connectBtn_clicked()
     udp->start(udpPort);
 }
 
-
-
 //Pair
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
@@ -298,6 +296,10 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->pair_btnSend->setEnabled(false);
         ui->pair_checkBoxSerialEnable->setCheckState(Qt::CheckState::Checked);
         ui->pair_checkBoxTcpEnable->setCheckState(Qt::CheckState::Unchecked);
+
+        ui->pair_checkBoxTcpClient->setCheckState(Qt::CheckState::Checked);
+        ui->pair_checkBoxTcpServer->setCheckState(Qt::CheckState::Unchecked);
+
         ui->pair_comboBox->clear();
         foreach (const QSerialPortInfo &_port, QSerialPortInfo::availablePorts())
         {
@@ -318,10 +320,18 @@ void MainWindow::isPairStatus(bool status){
     isPair = status;
     qDebug() << "Status: " << status;
 
+    ui->pair_checkBoxTcpClient->setEnabled(!isPair);
+    ui->pair_checkBoxTcpServer->setEnabled(!isPair);
+
+    ui->pair_btnSend->setEnabled(isPair);
     ui->pair_comboBox->setEnabled(!isPair);
     ui->part_comBoxBaudrate->setEnabled(!isPair);
-    ui->pair_lineTxtIp->setEnabled(!isPair);
     ui->pair_lineTxtPort->setEnabled(!isPair);
+
+    if(ui->pair_checkBoxTcpServer->isChecked())
+        ui->pair_lineTxtIp->setEnabled(false);
+    else
+        ui->pair_lineTxtIp->setEnabled(!isPair);
 
     if(isPair){
         ui->pair_btnPair->setText("Stop");
@@ -366,15 +376,27 @@ void MainWindow::on_pair_btnPair_clicked()
     quint16 port = ui->pair_lineTxtPort->text().toUInt(&isOk);
 
     if(!isPair){
-        if(!host.isEmpty() && port != 0){
-            QString text = "Pair " + portName +":"+ QString::number(baudrate) + " and " + host + ":" + QString::number(port);
-            ui->pair_LogTxt->setTextColor(QColor(0,0,0));
-            ui->pair_LogTxt->append(text);
+        if(ui->pair_checkBoxTcpServer->isChecked()){
+            if(port != 0){
+                QString text = "Pair " + portName +":"+ QString::number(baudrate) + " and TcpServer port " + QString::number(port);
+                ui->pair_LogTxt->setTextColor(QColor(0,0,0));
+                ui->pair_LogTxt->append(text);
 
-            pair->start(portName, baudrate, host, port);
+                pair->start(portName, baudrate, host, port);
+            }
+        }else{ //TCP Client
+            if(!host.isEmpty() && port != 0){
+                QString text = "Pair " + portName +":"+ QString::number(baudrate) + " and TcpClient " + host + ":" + QString::number(port);
+                ui->pair_LogTxt->setTextColor(QColor(0,0,0));
+                ui->pair_LogTxt->append(text);
+
+                pair->start(portName, baudrate, host, port);
+            }
         }
     }else{
         pair->stop();
+        if(ui->pair_checkBoxTcpServer->isChecked())
+            isPairStatus(false);
     }
 }
 
@@ -384,18 +406,30 @@ void MainWindow::on_pair_btnSend_clicked()
     if(isPair && !str.isEmpty()){
         QByteArray data = str.toLocal8Bit();
         QString text = "Send: " + str;
+
         if(ui->pair_checkBoxHexaSend->isChecked()){
             QByteArray msg = QByteArray::fromHex(data);
-            if(ui->pair_checkBoxSerialEnable->isChecked())
-                pair->tcpSendMsg(msg);
-            else
+
+            if(ui->pair_checkBoxSerialEnable->isChecked()){
+                if(ui->pair_checkBoxTcpClient->isChecked())
+                    pair->tcpClientSendMsg(msg);
+                else
+                    pair->tcpServerSendMsg(msg);
+            }else{
                 pair->serialSendMsg(msg);
+            }
+
         }else{
             const char *msg = data.data();
-            if(ui->pair_checkBoxTcpEnable->isChecked())
-                pair->tcpSendMsg(msg);
-            else
+
+            if(ui->pair_checkBoxTcpEnable->isChecked()){
+                if(ui->pair_checkBoxTcpClient->isChecked())
+                    pair->tcpClientSendMsg(msg);
+                else
+                    pair->tcpServerSendMsg(msg);
+            }else
                 pair->serialSendMsg(msg);
+
         }
 
         ui->pair_LogTxt->setTextColor(QColor(255,0,0));
@@ -425,4 +459,67 @@ void MainWindow::on_pair_checkBoxTcpEnable_stateChanged(int arg1)
         ui->pair_checkBoxSerialEnable->setCheckState(Qt::CheckState::Checked);
     }
 }
+
+void MainWindow::on_pair_checkBoxTcpClient_stateChanged(int arg1)
+{
+    if(ui->pair_checkBoxTcpClient->isChecked()){
+        ui->pair_checkBoxTcpServer->setCheckState(Qt::CheckState::Unchecked);
+        ui->pair_lineTxtIp->setEnabled(true);
+    }else{
+        ui->pair_checkBoxTcpServer->setCheckState(Qt::CheckState::Checked);
+        ui->pair_lineTxtIp->setEnabled(false);
+    }
+}
+
+void MainWindow::on_pair_checkBoxTcpServer_stateChanged(int arg1)
+{
+    if(ui->pair_checkBoxTcpServer->isChecked()){
+        ui->pair_checkBoxTcpClient->setCheckState(Qt::CheckState::Unchecked);
+        ui->pair_lineTxtIp->setEnabled(false);
+    }else{
+        ui->pair_checkBoxTcpClient->setCheckState(Qt::CheckState::Checked);
+        ui->pair_lineTxtIp->setEnabled(true);
+    }
+}
+
+//Scan Port
+void MainWindow::on_scan_btnPing_clicked()
+{
+    QString strIp = ui->scan_IpPing->text();
+    QProcess process;
+    process.start(QString("ping ") + strIp);
+    process.waitForFinished();
+    QByteArray ba = process.readAllStandardOutput();
+    QString data = QString::fromLocal8Bit(ba);
+    ui->scan_logTxt->append(data);
+}
+
+void MainWindow::on_scan_btnPort_clicked()
+{
+    bool isOk;
+    quint16 portStart = ui->scan_portStart->text().toInt(&isOk);
+    quint16 portEnd = ui->scan_portEnd->text().toInt(&isOk);
+    QString host = ui->scan_host->text();
+    ui->scan_logTxt->append("\nStart Scan Port from " + ui->scan_portStart->text() + " to " + ui->scan_portEnd->text() + " of " + host);
+    QTcpSocket socket;
+    for(quint16 i = portStart; i <= portEnd; i++){
+        socket.connectToHost(host, i);
+        if(socket.waitForConnected(30)){
+            QString data = "Port " + QString::number(i) + " Available";
+            ui->scan_logTxt->append(data);
+            socket.disconnectFromHost();
+        }
+    }
+}
+
+void MainWindow::on_scan_btnIp_clicked()
+{
+
+}
+
+void MainWindow::on_scan_btnClear_clicked()
+{
+    ui->scan_logTxt->clear();
+}
+
 

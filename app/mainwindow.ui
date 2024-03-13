@@ -76,7 +76,7 @@
                     <property name="minimumSize">
                      <size>
                       <width>100</width>
-                      <height>0</height>
+                      <height>29</height>
                      </size>
                     </property>
                     <item>
@@ -186,7 +186,7 @@
                     <property name="minimumSize">
                      <size>
                       <width>100</width>
-                      <height>0</height>
+                      <height>29</height>
                      </size>
                     </property>
                     <item>
@@ -305,6 +305,12 @@
                    </property>
                   </widget>
                   <widget class="QPushButton" name="serial_btnClear">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>29</height>
+                    </size>
+                   </property>
                    <property name="text">
                     <string>Clear</string>
                    </property>
@@ -322,12 +328,19 @@
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
-            <widget class="QLineEdit" name="serial_sendTxt"/>
+            <widget class="QLineEdit" name="serial_sendTxt">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>29</height>
+              </size>
+             </property>
+            </widget>
             <widget class="QCheckBox" name="serial_checkBoxHexaSend">
              <property name="maximumSize">
               <size>
                <width>70</width>
-               <height>16777215</height>
+               <height>29</height>
               </size>
              </property>
              <property name="text">
@@ -405,10 +418,24 @@
                <widget class="QWidget" name="layoutWidget">
                 <layout class="QVBoxLayout" name="verticalLayout_11">
                  <item>
-                  <widget class="QLineEdit" name="tcp_ipTxt"/>
+                  <widget class="QLineEdit" name="tcp_ipTxt">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>29</height>
+                    </size>
+                   </property>
+                  </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="tcp_portTxt"/>
+                  <widget class="QLineEdit" name="tcp_portTxt">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>29</height>
+                    </size>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </widget>
@@ -477,7 +504,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>200</width>
-                  <height>16777215</height>
+                  <height>29</height>
                  </size>
                 </property>
                 <property name="text">
@@ -485,6 +512,12 @@
                 </property>
                </widget>
                <widget class="QPushButton" name="tcp_btnClear">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>29</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>Clear</string>
                 </property>
@@ -498,12 +531,19 @@
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <widget class="QLineEdit" name="tcp_sendTxt"/>
+           <widget class="QLineEdit" name="tcp_sendTxt">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>29</height>
+             </size>
+            </property>
+           </widget>
            <widget class="QCheckBox" name="tcp_checkBoxHexaSend">
             <property name="maximumSize">
              <size>
               <width>70</width>
-              <height>16777215</height>
+              <height>29</height>
              </size>
             </property>
             <property name="text">
@@ -542,57 +582,77 @@
        <attribute name="title">
         <string>TCP Server</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_23">
+       <layout class="QVBoxLayout" name="verticalLayout_21">
         <item>
-         <widget class="QSplitter" name="splitter_14">
+         <widget class="QSplitter" name="splitter_32">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <widget class="QSplitter" name="splitter_13">
+          <widget class="QSplitter" name="splitter_14">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <widget class="QGroupBox" name="groupBox_7">
-            <property name="title">
-             <string>TCP Server</string>
+           <widget class="QSplitter" name="splitter_13">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_22">
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_21">
-               <item>
-                <widget class="QSplitter" name="splitter_11">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+            <widget class="QGroupBox" name="groupBox_7">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>TCP Server</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_22">
+              <item>
+               <widget class="QSplitter" name="splitter_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>Port</string>
                  </property>
-                 <widget class="QLabel" name="label">
-                  <property name="text">
-                   <string>Port</string>
-                  </property>
-                 </widget>
-                 <widget class="QLineEdit" name="tcpServer_LineTxtPort"/>
-                 <widget class="QPushButton" name="tcpServer_btnListen">
-                  <property name="text">
-                   <string>Listen</string>
-                  </property>
-                 </widget>
                 </widget>
-               </item>
-               <item>
-                <spacer name="verticalSpacer_4">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
+                <widget class="QLineEdit" name="tcpServer_LineTxtPort">
+                 <property name="maximumSize">
                   <size>
-                   <width>20</width>
-                   <height>40</height>
+                   <width>16777215</width>
+                   <height>29</height>
                   </size>
                  </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-            </layout>
+                </widget>
+                <widget class="QPushButton" name="tcpServer_btnListen">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>29</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Listen</string>
+                 </property>
+                </widget>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
            </widget>
            <widget class="QGroupBox" name="groupBox_8">
             <property name="title">
@@ -613,7 +673,7 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>378</width>
+                   <width>379</width>
                    <height>383</height>
                   </rect>
                  </property>
@@ -660,12 +720,19 @@
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <widget class="QLineEdit" name="tcpServer_LineTxtSend"/>
+           <widget class="QLineEdit" name="tcpServer_LineTxtSend">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>29</height>
+             </size>
+            </property>
+           </widget>
            <widget class="QCheckBox" name="tcpServer_checkBoxHexaSend">
             <property name="maximumSize">
              <size>
               <width>70</width>
-              <height>16777215</height>
+              <height>29</height>
              </size>
             </property>
             <property name="text">
@@ -716,8 +783,21 @@
                 <string>Port</string>
                </property>
               </widget>
-              <widget class="QLineEdit" name="udp_portTxt"/>
+              <widget class="QLineEdit" name="udp_portTxt">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>29</height>
+                </size>
+               </property>
+              </widget>
               <widget class="QPushButton" name="udp_connectBtn">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>29</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Connect</string>
                </property>
@@ -803,7 +883,7 @@
                <property name="maximumSize">
                 <size>
                  <width>200</width>
-                 <height>16777215</height>
+                 <height>29</height>
                 </size>
                </property>
                <property name="text">
@@ -811,6 +891,12 @@
                </property>
               </widget>
               <widget class="QPushButton" name="udp_btnClear">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>29</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Clear</string>
                </property>
@@ -840,9 +926,23 @@
             </property>
             <widget class="QGroupBox" name="groupBox_9">
              <property name="title">
-              <string>General (Serial/TCP Client)</string>
+              <string>General (Serial/TCP)</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_24">
+              <item>
+               <widget class="QCheckBox" name="pair_checkBoxTcpClient">
+                <property name="text">
+                 <string>TCP Client</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="pair_checkBoxTcpServer">
+                <property name="text">
+                 <string>TCP Server</string>
+                </property>
+               </widget>
+              </item>
               <item>
                <widget class="QSplitter" name="splitter_18">
                 <property name="orientation">
@@ -1078,7 +1178,7 @@
                   <property name="maximumSize">
                    <size>
                     <width>200</width>
-                    <height>16777215</height>
+                    <height>29</height>
                    </size>
                   </property>
                   <property name="text">
@@ -1108,12 +1208,19 @@
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
-            <widget class="QLineEdit" name="pair_lineTxtSend"/>
+            <widget class="QLineEdit" name="pair_lineTxtSend">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>29</height>
+              </size>
+             </property>
+            </widget>
             <widget class="QCheckBox" name="pair_checkBoxHexaSend">
              <property name="maximumSize">
               <size>
                <width>70</width>
-               <height>16777215</height>
+               <height>29</height>
               </size>
              </property>
              <property name="text">
@@ -1136,6 +1243,319 @@
          </layout>
         </item>
        </layout>
+      </widget>
+      <widget class="QWidget" name="ipTab">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <attribute name="title">
+        <string>IP</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_38">
+        <item>
+         <widget class="QSplitter" name="splitter_35">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QSplitter" name="splitter_34">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QGroupBox" name="groupBox_12">
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+            <property name="title">
+             <string>Ping</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_33">
+             <item>
+              <widget class="QSplitter" name="splitter_39">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <widget class="QSplitter" name="splitter_33">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <widget class="QLabel" name="label_11">
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>IpAddress</string>
+                 </property>
+                </widget>
+                <widget class="QLineEdit" name="scan_IpPing">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>29</height>
+                  </size>
+                 </property>
+                </widget>
+               </widget>
+               <widget class="QPushButton" name="scan_btnPing">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>29</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Ping</string>
+                </property>
+               </widget>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QGroupBox" name="groupBox_13">
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+            <property name="title">
+             <string>Scan Ip</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_35">
+             <item>
+              <widget class="QSplitter" name="splitter_31">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <widget class="QSplitter" name="splitter_30">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <widget class="QWidget" name="layoutWidget">
+                 <layout class="QVBoxLayout" name="verticalLayout_36">
+                  <item>
+                   <widget class="QLabel" name="label_12">
+                    <property name="maximumSize">
+                     <size>
+                      <width>100</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>IP Range From</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_13">
+                    <property name="maximumSize">
+                     <size>
+                      <width>100</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>To</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="layoutWidget">
+                 <layout class="QVBoxLayout" name="verticalLayout_34">
+                  <item>
+                   <widget class="QLineEdit" name="scan_ipStart">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>29</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="scan_ipEnd">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>29</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+               <widget class="QPushButton" name="scan_btnIp">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>29</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Scan</string>
+                </property>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QGroupBox" name="groupBox_11">
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+            <property name="title">
+             <string>Scan Port Available</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_37">
+             <item>
+              <widget class="QSplitter" name="splitter_29">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <widget class="QSplitter" name="splitter_26">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <widget class="QWidget" name="layoutWidget">
+                 <layout class="QVBoxLayout" name="verticalLayout_31">
+                  <item>
+                   <widget class="QLabel" name="label_14">
+                    <property name="text">
+                     <string>IpHost</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_9">
+                    <property name="text">
+                     <string>Start</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_10">
+                    <property name="text">
+                     <string>End</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="layoutWidget">
+                 <layout class="QVBoxLayout" name="verticalLayout_32">
+                  <item>
+                   <widget class="QLineEdit" name="scan_host">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>29</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="scan_portStart">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>29</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="scan_portEnd">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>29</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+               <widget class="QPushButton" name="scan_btnPort">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>29</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Scan</string>
+                </property>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QGroupBox" name="groupBox_14">
+           <property name="title">
+            <string>Log</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_23">
+            <item>
+             <widget class="QScrollArea" name="scrollArea_6">
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents_6">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>392</width>
+                 <height>417</height>
+                </rect>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_30">
+                <item>
+                 <widget class="QTextBrowser" name="scan_logTxt"/>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="scan_btnClear">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>29</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Clear</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Page</string>
+       </attribute>
       </widget>
      </widget>
     </item>
