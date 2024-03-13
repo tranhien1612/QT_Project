@@ -1,8 +1,8 @@
 # QT_Project
 QT Project with some function:
-- Serial
-- TCP Client/Server
-- UDP
+- Serial (Read/Write via Serial Port, option send hexa message and read hexa message)
+- TCP Client/Server (Read/Write via TcpClient and TcpServer, option send hexa message and read hexa message)
+- UDP (Read via UDP, read hexa message)
 - Pair Serial with TCP (TCP Client and TCP Server)
 - IP: Ping, Scan Port Available, Scan IP (To Do)
 
