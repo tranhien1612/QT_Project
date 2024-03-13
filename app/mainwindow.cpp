@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(pair, &Pair::isPair, this, &MainWindow::isPairStatus);
     connect(pair, &Pair::readPairSerialData, this, &MainWindow::readPairSerialData);
     connect(pair, &Pair::readPairTcpData, this, &MainWindow::readPairTcpData);
+
+    ipScan = new IpThread(this);
 }
 
 MainWindow::~MainWindow()
@@ -497,11 +499,7 @@ void MainWindow::on_pair_checkBoxTcpServer_stateChanged(int arg1)
 void MainWindow::on_scan_btnPing_clicked()
 {
     QString strIp = ui->scan_IpPing->text();
-    QProcess process;
-    process.start(QString("ping ") + strIp);
-    process.waitForFinished();
-    QByteArray ba = process.readAllStandardOutput();
-    QString data = QString::fromLocal8Bit(ba);
+    QString data = ipScan->pingIp(strIp);
     ui->scan_logTxt->append(data);
 }
 
@@ -512,20 +510,13 @@ void MainWindow::on_scan_btnPort_clicked()
     quint16 portEnd = ui->scan_portEnd->text().toInt(&isOk);
     QString host = ui->scan_host->text();
     ui->scan_logTxt->append("\nStart Scan Port from " + ui->scan_portStart->text() + " to " + ui->scan_portEnd->text() + " of " + host);
-    QTcpSocket socket;
-    for(quint16 i = portStart; i <= portEnd; i++){
-        socket.connectToHost(host, i);
-        if(socket.waitForConnected(30)){
-            QString data = "Port " + QString::number(i) + " Available";
-            ui->scan_logTxt->append(data);
-            socket.disconnectFromHost();
-        }
-    }
+    QString data = ipScan->scanPort(host, portStart, portEnd);
+    ui->scan_logTxt->append(data);
 }
 
 void MainWindow::on_scan_btnIp_clicked()
 {
-
+    //ToDo Scan Ip
 }
 
 void MainWindow::on_scan_btnClear_clicked()

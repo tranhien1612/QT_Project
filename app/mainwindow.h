@@ -28,6 +28,8 @@
 #include "mytcpserver.h"
 #include "pair.h"
 
+#include "ipthread.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -90,6 +92,8 @@ private:
 
     Pair* pair = nullptr;
     bool isPair = false;
+
+    IpThread* ipScan = nullptr;
 
 
 public slots:

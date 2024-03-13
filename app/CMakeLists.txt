@@ -28,6 +28,9 @@ set(PROJECT_SOURCES
     mytcpserver.cpp
     pair.cpp
     pair.h
+
+    ipthread.cpp
+    ipthread.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

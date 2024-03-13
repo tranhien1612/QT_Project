@@ -23,6 +23,11 @@ void MySerial::open(const QString &portName, qint32 baudRate){
         qDebug() << serial_->error();
         emit isConnect(false);
     }
+
+//    for(int i = 0; i < 100000; i++){
+//        qDebug() << "Serial" << i;
+//        QThread::msleep(500);
+//    }
 }
 void MySerial::close(){
     serial_->close();
