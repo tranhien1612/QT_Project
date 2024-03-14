@@ -18,7 +18,9 @@
 #include <QNetworkDatagram>
 #include <QThread>
 #include <QQuaternion>
+#include <QNetworkInterface>
 
+#include <QFile>
 #include <QMutex>
 #include <QHostInfo>
 

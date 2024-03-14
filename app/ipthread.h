@@ -12,6 +12,7 @@ public:
     explicit IpThread(QObject* parent = 0);
     QString pingIp(QString ip);
     QString scanPort(QString host, quint16 portStart, quint16 portEnd);
+    QString scanIp(QString ipStart, QString ipEnd);
 };
 
 #endif // IPTHREAD_H

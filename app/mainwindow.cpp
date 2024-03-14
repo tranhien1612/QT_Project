@@ -148,17 +148,21 @@ void MainWindow::readTcpClientData(QByteArray data){
     ui->tcp_logTxt->append(text);
 }
 
-void MainWindow::on_tcp_btnClear_clicked()
-{
-    ui->tcp_logTxt->clear();
-}
-
 void MainWindow::on_tcp_connectBtn_clicked()
 {
     bool isOk;
     QString host = ui->tcp_ipTxt->text();
     quint16 port = ui->tcp_portTxt->text().toUInt(&isOk);
     qDebug() << host << port;
+
+    QHostAddress tmp(host);
+    if (QAbstractSocket::IPv4Protocol != tmp.protocol() || port == 0){
+        ui->tcp_logTxt->setTextColor(QColor(0,0,0));
+        ui->tcp_logTxt->append("Unknown or invalid address or port");
+        return;
+    }
+
+
     if(!isTcpClientConnect && !host.isEmpty() && port != 0){
 
         tcpClient = new MyTcpClient(this);
@@ -193,6 +197,11 @@ void MainWindow::on_tcp_sendBtn_clicked()
         ui->tcp_logTxt->setTextColor(QColor(255,0,0));
         ui->tcp_logTxt->append(text);
     }
+}
+
+void MainWindow::on_tcp_btnClear_clicked()
+{
+    ui->tcp_logTxt->clear();
 }
 
 //Tcp Server
@@ -233,6 +242,11 @@ void MainWindow::on_tcpServer_btnListen_clicked()
 {
     bool isOk;
     quint16 port = ui->tcpServer_LineTxtPort->text().toUInt(&isOk);
+    if(port == 0){
+        ui->tcpServer_logTxt->setTextColor(QColor(0,0,0));
+        ui->tcpServer_logTxt->append("Unknown or invalid port.");
+        return;
+    }
 
     if(!isTcpServerListen && port != 0){
         QString text = "Listenning to port: "  + QString::number(port);
@@ -303,20 +317,14 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 
         ui->pair_checkBoxTcpClient->setCheckState(Qt::CheckState::Checked);
         ui->pair_checkBoxTcpServer->setCheckState(Qt::CheckState::Unchecked);
-
-        ui->pair_comboBox->clear();
-        foreach (const QSerialPortInfo &_port, QSerialPortInfo::availablePorts())
-        {
-            ui->pair_comboBox->addItem(_port.portName());
-        }
-    }else if(ui->tabWidget->tabText(index) == "Serial"){
-        ui->serial_comBox->clear();
-        foreach (const QSerialPortInfo &_port, QSerialPortInfo::availablePorts())
-        {
-            ui->serial_comBox->addItem(_port.portName());
-        }
     }
 
+    ui->pair_comboBox->clear();
+    ui->serial_comBox->clear();
+    foreach (const QSerialPortInfo &_port, QSerialPortInfo::availablePorts()){
+        ui->serial_comBox->addItem(_port.portName());
+        ui->pair_comboBox->addItem(_port.portName());
+    }
 
 }
 
@@ -382,11 +390,6 @@ void MainWindow::on_pair_btnPair_clicked()
     quint16 port = ui->pair_lineTxtPort->text().toUInt(&isOk);
 
     if(!isPair){
-//        pair = new Pair(this);
-//        connect(pair, &Pair::isPair, this, &MainWindow::isPairStatus);
-//        connect(pair, &Pair::readPairSerialData, this, &MainWindow::readPairSerialData);
-//        connect(pair, &Pair::readPairTcpData, this, &MainWindow::readPairTcpData);
-
         if(ui->pair_checkBoxTcpServer->isChecked()){
             if(port != 0){
                 QString text = "Pair " + portName +":"+ QString::number(baudrate) + " and TcpServer port " + QString::number(port);
@@ -396,6 +399,12 @@ void MainWindow::on_pair_btnPair_clicked()
                 pair->start(portName, baudrate, host, port);
             }
         }else{ //TCP Client
+            QHostAddress tmp(host);
+            if (QAbstractSocket::IPv4Protocol != tmp.protocol()){
+                ui->pair_LogTxt->setTextColor(QColor(0,0,0));
+                ui->pair_LogTxt->append("Unknown or invalid address or port");
+                return;
+            }
             if(!host.isEmpty() && port != 0){
                 QString text = "Pair " + portName +":"+ QString::number(baudrate) + " and TcpClient " + host + ":" + QString::number(port);
                 ui->pair_LogTxt->setTextColor(QColor(0,0,0));
@@ -408,7 +417,6 @@ void MainWindow::on_pair_btnPair_clicked()
         pair->stop();
         if(ui->pair_checkBoxTcpServer->isChecked())
             isPairStatus(false);
-//        delete pair;
     }
 }
 
@@ -499,6 +507,11 @@ void MainWindow::on_pair_checkBoxTcpServer_stateChanged(int arg1)
 void MainWindow::on_scan_btnPing_clicked()
 {
     QString strIp = ui->scan_IpPing->text();
+    QHostAddress tmp(strIp);
+    if (QAbstractSocket::IPv4Protocol != tmp.protocol()){
+        ui->scan_logTxt->append("Unknown or invalid address");
+        return;
+    }
     QString data = ipScan->pingIp(strIp);
     ui->scan_logTxt->append(data);
 }
